@@ -11,8 +11,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+
+import { Prisma } from '@prisma/client';
 
 @Controller('users')
 export class UsersController {
@@ -20,7 +20,7 @@ export class UsersController {
 
   //get all users
   @Get()
-  findAll(@Query('role') role?: string) {
+  findAll(@Query('role') role?: 'FULLSTACK' | 'FRONTEND' | 'BACKEND') {
     return this.userServices.findAll(role);
   }
 
@@ -32,14 +32,14 @@ export class UsersController {
 
   //create a user
   @Post()
-  create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
+  create(@Body(ValidationPipe) createUserDto: Prisma.UserCreateInput) {
     return this.userServices.create(createUserDto);
   }
 
   @Patch(':id')
   update(
     @Param(':id', ParseIntPipe) id: number,
-    @Body(ValidationPipe) updateUserDto: UpdateUserDto,
+    @Body(ValidationPipe) updateUserDto: Prisma.UserUpdateInput,
   ) {
     return this.userServices.update(id, updateUserDto);
   }
